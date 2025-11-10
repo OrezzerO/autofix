@@ -6,6 +6,7 @@ on:
 
 jobs:
   handle-comment:
+    if: ${{ github.event.comment.body == '/autofix' }}
     runs-on: ubuntu-latest
 
     steps:
