@@ -104,7 +104,7 @@ jobs:
         id: codex
         uses: openai/codex-action@main
         with:
-          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           prompt: |
             You are responding to GitHub issue #${{ env.ISSUE_NUMBER }} titled "${{ env.ISSUE_TITLE }}".
             Issue URL: ${{ env.ISSUE_HTML_URL }}
@@ -126,7 +126,7 @@ jobs:
 
             Make the minimal changes necessary to resolve this issue.
             Run relevant tests (npm test) before finishing, keep diffs focused, and ensure lint/test status is clean.
-          codex_args: '["--config","sandbox_mode=\"workspace-write\""]'
+          codex-args: '["--config","sandbox_mode=\"workspace-write\""]'
 
       - name: Verify tests
         run: npm test --silent
