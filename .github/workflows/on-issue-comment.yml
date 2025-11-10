@@ -1,0 +1,69 @@
+name: On Issue Comment (with all history)
+
+on:
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  handle-comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Show trigger info
+        run: |
+          echo "🔔 Triggered by comment on issue #${{ github.event.issue.number }}"
+          echo "👤 Comment by: ${{ github.event.comment.user.login }}"
+          echo "💬 Comment content:"
+          echo "${{ github.event.comment.body }}"
+
+      - name: Save Issue & Comment Info
+        run: |
+          echo "ISSUE_NUMBER=${{ github.event.issue.number }}" >> $GITHUB_ENV
+          echo "ISSUE_TITLE=${{ github.event.issue.title }}" >> $GITHUB_ENV
+          echo "ISSUE_BODY<<EOF" >> $GITHUB_ENV
+          echo "${{ github.event.issue.body }}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "COMMENT_AUTHOR=${{ github.event.comment.user.login }}" >> $GITHUB_ENV
+          echo "COMMENT_BODY<<EOF" >> $GITHUB_ENV
+          echo "${{ github.event.comment.body }}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Get all comments for the issue
+        id: get_comments
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue_number = context.payload.issue.number;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+            });
+
+            core.info(`Found ${comments.length} comments`);
+            const formatted = comments
+              .map(
+                (c) => `👤 ${c.user.login} @ ${c.created_at}\n${c.body}\n`,
+              )
+              .join('\n---\n');
+
+            core.setOutput('all_comments', formatted);
+
+      - name: Save comments to env
+        run: |
+          echo "ALL_COMMENTS<<EOF" >> $GITHUB_ENV
+          echo "${{ steps.get_comments.outputs.all_comments }}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Show extracted info
+        run: |
+          echo "🪶 Issue #$ISSUE_NUMBER - $ISSUE_TITLE"
+          echo ""
+          echo "📋 Issue Body:"
+          echo "$ISSUE_BODY"
+          echo ""
+          echo "💬 Latest Comment by $COMMENT_AUTHOR:"
+          echo "$COMMENT_BODY"
+          echo ""
+          echo "🗃️ All Comments:"
+          echo "$ALL_COMMENTS"
