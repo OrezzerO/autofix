@@ -24,17 +24,17 @@ jobs:
       - name: Save Issue & Comment Info
         run: |
           cat <<'EOF' >> "$GITHUB_ENV"
-ISSUE_NUMBER=${{ github.event.issue.number }}
-ISSUE_TITLE=${{ github.event.issue.title }}
-ISSUE_HTML_URL=${{ github.event.issue.html_url }}
-ISSUE_BODY<<EOB
-${{ github.event.issue.body }}
-EOB
-COMMENT_AUTHOR=${{ github.event.comment.user.login }}
-COMMENT_BODY<<EOC
-${{ github.event.comment.body }}
-EOC
-EOF
+          ISSUE_NUMBER=${{ github.event.issue.number }}
+          ISSUE_TITLE=${{ github.event.issue.title }}
+          ISSUE_HTML_URL=${{ github.event.issue.html_url }}
+          ISSUE_BODY<<EOB
+          ${{ github.event.issue.body }}
+          EOB
+          COMMENT_AUTHOR=${{ github.event.comment.user.login }}
+          COMMENT_BODY<<EOC
+          ${{ github.event.comment.body }}
+          EOC
+          EOF
 
       - name: Get all comments for the issue
         id: get_comments
@@ -60,10 +60,10 @@ EOF
       - name: Save comments to env
         run: |
           cat <<'EOF' >> "$GITHUB_ENV"
-ALL_COMMENTS<<EOC
-${{ steps.get_comments.outputs.all_comments }}
-EOC
-EOF
+          ALL_COMMENTS<<EOC
+          ${{ steps.get_comments.outputs.all_comments }}
+          EOC
+          EOF
 
       - name: Show extracted info
         run: |
