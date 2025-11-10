@@ -1,0 +1,15 @@
+{
+  "name": "autofix",
+  "version": "1.0.0",
+  "description": "Codex-driven autofix framework orchestrating Feishu ↔ GitHub workflows without direct API coupling.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node ./src/index.js",
+    "dev": "node --watch ./src/index.js",
+    "test": "echo \"No automated tests yet\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}
